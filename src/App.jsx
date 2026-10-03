@@ -88,13 +88,29 @@ export default function App() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+
         try {
+          // 1. Определяем валюту по координатам
+          showToast("Определяем валюту...", "info");
+          const { currency } = await getCurrencyByCoordinates(
+            latitude,
+            longitude
+          );
+
+          if (!currency) {
+            showToast(
+              "Не удалось определить валюту, используем UZS",
+              "warning"
+            );
+          }
+
+          // 2. Отправляем цену
           await submitPrice({
             barcode: currentBarcode,
             productName: currentProduct.name,
             brand: currentProduct.brand,
             price,
-            currency: "UZS",
+            currency: currency || "UZS", // фолбэк
             storeName: "Метка пользователя",
             lat: latitude,
             lng: longitude,
@@ -102,6 +118,7 @@ export default function App() {
 
           showToast("Цена отправлена!", "success");
 
+          // 3. Ищем цены поблизости
           const nearby = await queryNearbyPrices(
             currentBarcode,
             latitude,
@@ -109,7 +126,6 @@ export default function App() {
           );
           setNearbyPrices(nearby);
 
-          // Очищаем текущий товар и поле ввода
           setPriceInput("");
           resetCurrent();
         } catch (err) {
