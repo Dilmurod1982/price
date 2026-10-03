@@ -91,13 +91,11 @@ export default function App() {
         const { latitude, longitude } = position.coords;
 
         try {
-          // 1. Определяем валюту и название локации одним запросом
           const { currency, locationName } = await getLocationInfo(
             latitude,
             longitude
           );
 
-          // 2. Отправляем цену
           await submitPrice({
             barcode: currentBarcode,
             productName: currentProduct.name,
@@ -112,7 +110,6 @@ export default function App() {
 
           showToast("Цена отправлена!", "success");
 
-          // 3. Ищем цены поблизости
           const nearby = await queryNearbyPrices(
             currentBarcode,
             latitude,
@@ -120,7 +117,6 @@ export default function App() {
           );
           setNearbyPrices(nearby);
 
-          // 4. Очищаем товар и поле ввода
           setPriceInput("");
           resetCurrent();
         } catch (err) {
@@ -151,6 +147,19 @@ export default function App() {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   };
+
+  // Вычисляем статистику по ценам заранее (вне JSX)
+  const minPrice = nearbyPrices.length
+    ? Math.min(...nearbyPrices.map((p) => p.price))
+    : 0;
+  const maxPrice = nearbyPrices.length
+    ? Math.max(...nearbyPrices.map((p) => p.price))
+    : 0;
+  const spread = maxPrice - minPrice;
+  const spreadPercent =
+    minPrice > 0 ? Math.round((spread / minPrice) * 100) : 0;
+  const myPrice = nearbyPrices.find((p) => p.userId === user?.uid)?.price;
+  const hasComparison = nearbyPrices.length > 1 && spread > 0;
 
   if (authLoading) {
     return (
@@ -263,39 +272,145 @@ export default function App() {
           </section>
         )}
 
-        {/* Список цен поблизости */}
+        {/* Список цен с сравнением */}
         {nearbyPrices.length > 0 && (
           <section className="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
               Цены поблизости
             </h3>
-            <div className="divide-y divide-gray-100">
-              {nearbyPrices.map((p) => (
-                <div
-                  key={p.id}
-                  className="flex items-center justify-between py-3 gap-3"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="text-base sm:text-lg font-semibold text-gray-900">
-                      {p.price.toLocaleString()} {p.currency}
-                    </div>
-                    {p.locationName ? (
-                      <div className="text-xs text-gray-500 truncate">
-                        {p.locationName}
-                      </div>
-                    ) : (
-                      <div className="text-xs text-gray-400">
-                        {p.distance} м от вас
-                      </div>
-                    )}
-                  </div>
-                  {p.verified && (
-                    <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded shrink-0">
-                      ✓ проверено
-                    </span>
-                  )}
+            <p className="text-xs text-gray-400 mb-4">
+              {nearbyPrices.length}{" "}
+              {nearbyPrices.length === 1
+                ? "магазин"
+                : nearbyPrices.length < 5
+                ? "магазина"
+                : "магазинов"}{" "}
+              в радиусе 5 км
+            </p>
+
+            {/* Сводка */}
+            {hasComparison && (
+              <div className="bg-blue-50 rounded-xl p-4 mb-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Самая низкая</span>
+                  <span className="font-semibold text-green-700">
+                    {minPrice.toLocaleString()} {nearbyPrices[0].currency}
+                  </span>
                 </div>
-              ))}
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Самая высокая</span>
+                  <span className="font-semibold text-red-700">
+                    {maxPrice.toLocaleString()} {nearbyPrices[0].currency}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Разброс</span>
+                  <span className="font-medium text-gray-900">
+                    {spread.toLocaleString()} {nearbyPrices[0].currency} (
+                    {spreadPercent}%)
+                  </span>
+                </div>
+
+                {myPrice && myPrice !== minPrice && (
+                  <div className="pt-2 border-t border-blue-200 flex justify-between text-sm">
+                    <span className="text-gray-700">Ваша цена</span>
+                    <span className="font-semibold text-gray-900">
+                      {myPrice.toLocaleString()} {nearbyPrices[0].currency}{" "}
+                      <span className="text-red-600">
+                        (+{(myPrice - minPrice).toLocaleString()})
+                      </span>
+                    </span>
+                  </div>
+                )}
+
+                {myPrice && myPrice === minPrice && (
+                  <div className="pt-2 border-t border-blue-200 text-sm text-green-700 font-medium text-center">
+                    🎉 Ваша цена — самая низкая!
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Дисклеймер при малом количестве данных */}
+            {nearbyPrices.length === 1 && (
+              <div className="text-xs text-amber-700 bg-amber-50 p-2 rounded mb-3">
+                Пока только одна цена. Сравнивать не с чем — пригласите друзей
+                отсканировать этот товар.
+              </div>
+            )}
+
+            {/* Список с подсветкой */}
+            <div className="divide-y divide-gray-100">
+              {nearbyPrices.map((p) => {
+                const isMin = hasComparison && p.price === minPrice;
+                const isMax = hasComparison && p.price === maxPrice;
+                const isMine = p.userId === user?.uid;
+
+                return (
+                  <div
+                    key={p.id}
+                    className={`py-3 px-2 -mx-2 rounded-lg ${
+                      isMine
+                        ? "bg-blue-50"
+                        : isMin
+                        ? "bg-green-50"
+                        : isMax
+                        ? "bg-red-50"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <span
+                            className={`text-base sm:text-lg font-semibold ${
+                              isMin
+                                ? "text-green-700"
+                                : isMax
+                                ? "text-red-700"
+                                : "text-gray-900"
+                            }`}
+                          >
+                            {p.price.toLocaleString()} {p.currency}
+                          </span>
+
+                          {isMin && (
+                            <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded">
+                              Дешевле всего
+                            </span>
+                          )}
+                          {isMax && (
+                            <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded">
+                              Дороже всего
+                            </span>
+                          )}
+                          {isMine && (
+                            <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded">
+                              Ваша цена
+                            </span>
+                          )}
+                        </div>
+
+                        {p.locationName ? (
+                          <div className="text-xs text-gray-500 mt-1 truncate">
+                            {p.locationName}
+                          </div>
+                        ) : (
+                          <div className="text-xs text-gray-400 mt-1">
+                            {p.distance} м от вас
+                          </div>
+                        )}
+                      </div>
+
+                      {hasComparison && !isMin && (
+                        <div className="text-xs text-gray-500 whitespace-nowrap text-right">
+                          +{(p.price - minPrice).toLocaleString()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}
