@@ -3,30 +3,31 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export const usePriceStore = create(
   persist(
-    (set, get) => ({
-      // текущее состояние сканирования
+    (set) => ({
       currentBarcode: null,
       currentProduct: null,
-      
-      // оффлайн-очередь (цены, сохранённые при отсутствии сети)
       pendingPrices: [],
-      
+
       setBarcode: (barcode) => set({ currentBarcode: barcode }),
       setProduct: (product) => set({ currentProduct: product }),
-      
+
+      resetCurrent: () => set({
+        currentBarcode: null,
+        currentProduct: null,
+      }),
+
       queuePrice: (priceEntry) => set((state) => ({
-        pendingPrices: [...state.pendingPrices, priceEntry]
+        pendingPrices: [...state.pendingPrices, priceEntry],
       })),
-      
-      clearPendingPrices: () => set({ pendingPrices: [] }),
-      
-      // удалить из очереди успешно загруженную запись
+
       removePendingPrice: (tempId) => set((state) => ({
-        pendingPrices: state.pendingPrices.filter(p => p.tempId !== tempId)
+        pendingPrices: state.pendingPrices.filter((p) => p.tempId !== tempId),
       })),
+
+      clearPendingPrices: () => set({ pendingPrices: [] }),
     }),
     {
-      name: 'price-scanner-storage', // ключ в localStorage
+      name: 'price-scanner-storage',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ pendingPrices: state.pendingPrices }),
     }

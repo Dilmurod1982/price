@@ -14,9 +14,9 @@ export async function submitPrice({
 }) {
   const user = auth.currentUser;
   if (!user) throw new Error('Пользователь не аутентифицирован');
-  
+
   const geohash = geohashForLocation([lat, lng]);
-  
+
   const priceData = {
     barcode,
     productName,
@@ -31,7 +31,7 @@ export async function submitPrice({
     timestamp: serverTimestamp(),
     verified: false,
   };
-  
+
   const docRef = await addDoc(collection(db, 'prices'), priceData);
   return docRef.id;
 }

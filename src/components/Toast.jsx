@@ -17,9 +17,9 @@ export function Toast({ message, type = "info", onClose }) {
   };
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-md pointer-events-none">
       <div
-        className={`${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg`}
+        className={`${colors[type]} text-white px-5 py-3 rounded-lg shadow-lg text-center text-sm`}
       >
         {message}
       </div>

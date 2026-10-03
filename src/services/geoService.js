@@ -1,19 +1,24 @@
 import { geohashQueryBounds, distanceBetween } from 'geofire-common';
-import { collection, query, orderBy, startAt, endAt, where, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  orderBy,
+  startAt,
+  endAt,
+  where,
+  getDocs,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 
-// вычислить geohash координат
-export function getGeohash(lat, lng) {
-  return import('geofire-common').then(({ geohashForLocation }) =>
-    geohashForLocation([lat, lng])
-  );
-}
-
-// найти цены поблизости
-export async function queryNearbyPrices(barcode, centerLat, centerLng, radiusInM = 5000) {
+export async function queryNearbyPrices(
+  barcode,
+  centerLat,
+  centerLng,
+  radiusInM = 5000
+) {
   const center = [centerLat, centerLng];
   const bounds = geohashQueryBounds(center, radiusInM);
-  
+
   const promises = bounds.map(([start, end]) => {
     const q = query(
       collection(db, 'prices'),
@@ -24,16 +29,16 @@ export async function queryNearbyPrices(barcode, centerLat, centerLng, radiusInM
     );
     return getDocs(q);
   });
-  
+
   const snapshots = await Promise.all(promises);
-  
+
   const results = [];
   snapshots.forEach((snap) => {
     snap.docs.forEach((doc) => {
       const data = doc.data();
       const distanceInKm = distanceBetween([data.lat, data.lng], center);
       const distanceInM = distanceInKm * 1000;
-      
+
       if (distanceInM <= radiusInM) {
         results.push({
           id: doc.id,
@@ -43,7 +48,6 @@ export async function queryNearbyPrices(barcode, centerLat, centerLng, radiusInM
       }
     });
   });
-  
-  // сортировка по возрастанию цены
+
   return results.sort((a, b) => a.price - b.price);
 }

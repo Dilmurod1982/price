@@ -5,8 +5,8 @@ export default function BarcodeScanner({ onScan }) {
   const [error, setError] = useState(null);
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-200">
+    <div className="w-full">
+      <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-200 bg-black aspect-square sm:aspect-video">
         <Scanner
           onScan={(detectedCodes) => {
             if (detectedCodes.length > 0) {
@@ -16,6 +16,10 @@ export default function BarcodeScanner({ onScan }) {
           onError={(err) => setError(err.message)}
           formats={["ean_13", "ean_8", "upc_a", "upc_e", "code_128"]}
           paused={false}
+          styles={{
+            container: { width: "100%", height: "100%" },
+            video: { width: "100%", height: "100%", objectFit: "cover" },
+          }}
         />
       </div>
       {error && (
