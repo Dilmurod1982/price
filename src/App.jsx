@@ -13,6 +13,10 @@ import { submitPrice } from "./services/priceService";
 import { queryNearbyPrices } from "./services/geoService";
 import { getLocationInfo } from "./services/locationService";
 
+// Радиус поиска цен поблизости
+const SEARCH_RADIUS_KM = 0.1;
+const SEARCH_RADIUS_M = SEARCH_RADIUS_KM * 1000;
+
 export default function App() {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
@@ -72,11 +76,18 @@ export default function App() {
               const nearby = await queryNearbyPrices(
                 barcode,
                 latitude,
-                longitude
+                longitude,
+                SEARCH_RADIUS_M
               );
               setNearbyPrices(nearby);
             } catch (err) {
               console.error("Nearby query failed:", err);
+              if (err.message?.includes("index")) {
+                showToast(
+                  "Нужен индекс Firestore — проверь консоль",
+                  "warning"
+                );
+              }
             }
           },
           (err) => {
@@ -89,6 +100,35 @@ export default function App() {
       showToast(t("scanner.productLoadError"), "error");
     } finally {
       setProductLoading(false);
+    }
+  };
+
+  const handleSelectFromMyPrices = async (price) => {
+    setShowMyPrices(false);
+
+    setBarcode(price.barcode);
+    setProduct({
+      barcode: price.barcode,
+      name: price.productName,
+      brand: price.brand || "",
+      imageUrl: "",
+    });
+
+    setPriceInput("");
+    setNearbyPrices([]);
+
+    try {
+      showToast(t("scanner.searchingNearby"), "info");
+      const nearby = await queryNearbyPrices(
+        price.barcode,
+        price.lat,
+        price.lng,
+        SEARCH_RADIUS_M
+      );
+      setNearbyPrices(nearby);
+    } catch (err) {
+      console.error("Nearby query from my prices failed:", err);
+      showToast(t("scanner.productLoadError"), "error");
     }
   };
 
@@ -139,7 +179,8 @@ export default function App() {
           const nearby = await queryNearbyPrices(
             currentBarcode,
             latitude,
-            longitude
+            longitude,
+            SEARCH_RADIUS_M
           );
           setNearbyPrices(nearby);
 
@@ -196,6 +237,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
+      {/* Шапка */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2">
           <h1 className="text-lg sm:text-xl font-bold text-gray-900 shrink-0">
@@ -238,19 +280,23 @@ export default function App() {
         </div>
       </header>
 
+      {/* Основной контент */}
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+        {/* Сканер */}
         <section className="w-full flex justify-center">
           <div className="w-full max-w-sm sm:max-w-md">
             <BarcodeScanner onScan={handleScan} />
           </div>
         </section>
 
+        {/* Загрузка товара */}
         {productLoading && (
           <div className="text-center text-gray-500 py-4 text-sm">
             {t("scanner.loadingProduct")}
           </div>
         )}
 
+        {/* Карточка товара */}
         {currentProduct && !productLoading && (
           <section className="bg-white rounded-2xl shadow-sm p-4 sm:p-5 space-y-4">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -308,16 +354,43 @@ export default function App() {
           </section>
         )}
 
+        {/* Список цен с сравнением */}
         {nearbyPrices.length > 0 && (
           <section className="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
               {t("nearby.title")}
             </h3>
-            <p className="text-xs text-gray-400 mb-4">
-              {t("nearby.stores", { count: nearbyPrices.length })}{" "}
-              {t("nearby.storesRadius", { radius: 5 })}
-            </p>
 
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-xs text-gray-400">
+                {t("nearby.stores", { count: nearbyPrices.length })}{" "}
+                {SEARCH_RADIUS_KM < 1
+                  ? t("nearby.storesRadiusMeters", {
+                      meters: Math.round(SEARCH_RADIUS_KM * 1000),
+                    })
+                  : t("nearby.storesRadiusKm", { km: SEARCH_RADIUS_KM })}
+              </p>
+              {nearbyPrices.length > 1 && (
+                <span className="text-xs text-gray-400 flex items-center gap-1">
+                  <svg
+                    className="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"
+                    />
+                  </svg>
+                  {t("nearby.sortedLowToHigh")}
+                </span>
+              )}
+            </div>
+
+            {/* Сводка */}
             {hasComparison && (
               <div className="bg-blue-50 rounded-xl p-4 mb-4 space-y-2">
                 <div className="flex justify-between text-sm">
@@ -362,12 +435,14 @@ export default function App() {
               </div>
             )}
 
+            {/* Дисклеймер при одной цене */}
             {nearbyPrices.length === 1 && (
               <div className="text-xs text-amber-700 bg-amber-50 p-2 rounded mb-3">
                 {t("nearby.onlyOne")}
               </div>
             )}
 
+            {/* Список с подсветкой */}
             <div className="divide-y divide-gray-100">
               {nearbyPrices.map((p) => {
                 const isMin = hasComparison && p.price === minPrice;
@@ -443,6 +518,7 @@ export default function App() {
           </section>
         )}
 
+        {/* Пустое состояние */}
         {!currentProduct && !productLoading && nearbyPrices.length === 0 && (
           <div className="text-center py-12 text-gray-400 text-sm">
             <p>{t("scanner.hint")}</p>
@@ -456,7 +532,12 @@ export default function App() {
         onClose={() => setToast({ message: "", type: "info" })}
       />
 
-      {showMyPrices && <MyPrices onClose={() => setShowMyPrices(false)} />}
+      {showMyPrices && (
+        <MyPrices
+          onClose={() => setShowMyPrices(false)}
+          onSelect={handleSelectFromMyPrices}
+        />
+      )}
     </div>
   );
 }

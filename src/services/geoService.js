@@ -14,7 +14,7 @@ export async function queryNearbyPrices(
   barcode,
   centerLat,
   centerLng,
-  radiusInM = 5000
+  radiusInM = 100
 ) {
   const center = [centerLat, centerLng];
   const bounds = geohashQueryBounds(center, radiusInM);

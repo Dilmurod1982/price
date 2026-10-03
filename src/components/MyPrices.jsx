@@ -4,7 +4,7 @@ import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../hooks/useAuth";
 
-export function MyPrices({ onClose }) {
+export function MyPrices({ onClose, onSelect }) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [prices, setPrices] = useState([]);
@@ -74,9 +74,10 @@ export function MyPrices({ onClose }) {
 
         <div className="space-y-3">
           {prices.map((p) => (
-            <div
+            <button
               key={p.id}
-              className="bg-white border border-gray-100 rounded-xl p-4"
+              onClick={() => onSelect && onSelect(p)}
+              className="w-full text-left bg-white border border-gray-100 rounded-xl p-4 hover:border-blue-300 hover:shadow-sm transition"
             >
               <div className="flex justify-between items-start gap-3">
                 <div className="min-w-0 flex-1">
@@ -147,10 +148,15 @@ export function MyPrices({ onClose }) {
                 )
               )}
 
-              <div className="text-xs text-gray-400 mt-2">
-                {p.timestamp?.toDate?.().toLocaleString() || "—"}
+              <div className="flex items-center justify-between mt-2">
+                <div className="text-xs text-gray-400">
+                  {p.timestamp?.toDate?.().toLocaleString() || "—"}
+                </div>
+                <div className="text-xs text-blue-600 font-medium">
+                  Смотреть цены →
+                </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

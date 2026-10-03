@@ -26,7 +26,8 @@
     "nearby": {
       "title": "Harga di sekitar",
       "stores_other": "{{count}} toko",
-      "storesRadius": "dalam radius {{radius}} km",
+      "storesRadiusMeters": "dalam radius {{meters}} m",
+      "storesRadiusKm": "dalam radius {{km}} km",
       "lowest": "Terendah",
       "highest": "Tertinggi",
       "spread": "Selisih",

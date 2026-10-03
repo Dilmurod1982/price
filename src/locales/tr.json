@@ -26,7 +26,8 @@
     "nearby": {
       "title": "Yakındaki fiyatlar",
       "stores_other": "{{count}} mağaza",
-      "storesRadius": "{{radius}} km içinde",
+      "storesRadiusMeters": "{{meters}} m içinde",
+      "storesRadiusKm": "{{km}} km içinde",
       "lowest": "En düşük",
       "highest": "En yüksek",
       "spread": "Fark",

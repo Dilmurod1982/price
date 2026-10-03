@@ -26,7 +26,8 @@
     "nearby": {
       "title": "近くの価格",
       "stores_other": "{{count}} 店舗",
-      "storesRadius": "{{radius}} km 以内",
+      "storesRadiusMeters": "{{meters}} m 以内",
+"storesRadiusKm": "{{km}} km 以内",
       "lowest": "最安値",
       "highest": "最高値",
       "spread": "価格差",

@@ -26,7 +26,8 @@
     "nearby": {
       "title": "附近价格",
       "stores_other": "{{count}} 家商店",
-      "storesRadius": "{{radius}} 公里内",
+      "storesRadiusMeters": "{{meters}} 米内",
+"storesRadiusKm": "{{km}} 公里内",
       "lowest": "最低",
       "highest": "最高",
       "spread": "差价",
