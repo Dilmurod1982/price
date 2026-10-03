@@ -9,6 +9,7 @@ import { MyPrices } from "./components/MyPrices";
 import { fetchProductByBarcode } from "./services/productApi";
 import { submitPrice } from "./services/priceService";
 import { queryNearbyPrices } from "./services/geoService";
+import { getLocationInfo } from "./services/locationService";
 
 export default function App() {
   const { user, loading: authLoading } = useAuth();
@@ -90,19 +91,11 @@ export default function App() {
         const { latitude, longitude } = position.coords;
 
         try {
-          // 1. Определяем валюту по координатам
-          showToast("Определяем валюту...", "info");
-          const { currency } = await getCurrencyByCoordinates(
+          // 1. Определяем валюту и название локации одним запросом
+          const { currency, locationName } = await getLocationInfo(
             latitude,
             longitude
           );
-
-          if (!currency) {
-            showToast(
-              "Не удалось определить валюту, используем UZS",
-              "warning"
-            );
-          }
 
           // 2. Отправляем цену
           await submitPrice({
@@ -110,8 +103,9 @@ export default function App() {
             productName: currentProduct.name,
             brand: currentProduct.brand,
             price,
-            currency: currency || "UZS", // фолбэк
+            currency: currency || "UZS",
             storeName: "Метка пользователя",
+            locationName,
             lat: latitude,
             lng: longitude,
           });
@@ -126,6 +120,7 @@ export default function App() {
           );
           setNearbyPrices(nearby);
 
+          // 4. Очищаем товар и поле ввода
           setPriceInput("");
           resetCurrent();
         } catch (err) {
@@ -280,13 +275,19 @@ export default function App() {
                   key={p.id}
                   className="flex items-center justify-between py-3 gap-3"
                 >
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="text-base sm:text-lg font-semibold text-gray-900">
                       {p.price.toLocaleString()} {p.currency}
                     </div>
-                    <div className="text-xs text-gray-400">
-                      {p.distance} м от вас
-                    </div>
+                    {p.locationName ? (
+                      <div className="text-xs text-gray-500 truncate">
+                        {p.locationName}
+                      </div>
+                    ) : (
+                      <div className="text-xs text-gray-400">
+                        {p.distance} м от вас
+                      </div>
+                    )}
                   </div>
                   {p.verified && (
                     <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded shrink-0">

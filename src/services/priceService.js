@@ -9,6 +9,7 @@ export async function submitPrice({
   price,
   currency,
   storeName,
+  locationName,      // ← новое поле
   lat,
   lng,
 }) {
@@ -24,6 +25,7 @@ export async function submitPrice({
     price: Number(price),
     currency,
     storeName,
+    locationName: locationName || '',   // ← сохраняем
     lat,
     lng,
     geohash,

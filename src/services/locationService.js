@@ -1,11 +1,8 @@
 /**
- * Определяет страну и валюту по координатам.
- * Использует Nominatim (OpenStreetMap) для обратного геокодирования.
- * 
- * ВАЖНО: политика Nominatim — не более 1 запроса в секунду.
- * Не вызывай эту функцию в цикле или на каждое движение.
+ * Определяет страну, валюту и название локации по координатам.
+ * Один запрос к Nominatim — возвращает всё сразу.
  */
-export async function getCurrencyByCoordinates(lat, lng) {
+export async function getLocationInfo(lat, lng) {
     try {
       const url = new URL('https://nominatim.openstreetmap.org/reverse');
       url.searchParams.set('lat', lat);
@@ -13,38 +10,65 @@ export async function getCurrencyByCoordinates(lat, lng) {
       url.searchParams.set('format', 'json');
       url.searchParams.set('addressdetails', '1');
       url.searchParams.set('accept-language', 'ru');
-      // Обязательно для политики Nominatim — идентификация запроса
       url.searchParams.set('email', 'your-email@example.com');
   
-      const response = await fetch(url.toString(), {
-        headers: {
-          // Многие браузеры игнорируют этот заголовок, но email в query — работает всегда
-          'Accept': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Nominatim responded ${response.status}`);
-      }
+      const response = await fetch(url.toString());
+      if (!response.ok) throw new Error(`Nominatim ${response.status}`);
   
       const data = await response.json();
-      const countryCode = data?.address?.country_code;
+      const addr = data?.address || {};
   
-      if (!countryCode) {
-        return { countryCode: null, currency: null };
-      }
+      const countryCode = addr.country_code?.toUpperCase() || null;
+      const currency = getCurrencyByCountry(countryCode);
   
-      return {
-        countryCode: countryCode.toUpperCase(),
-        currency: getCurrencyByCountry(countryCode),
-      };
+      // Собираем читаемый адрес из доступных полей
+      const locationName = buildLocationName(addr, data.display_name);
+  
+      return { countryCode, currency, locationName };
     } catch (error) {
       console.error('Reverse geocoding failed:', error);
-      return { countryCode: null, currency: null };
+      return { countryCode: null, currency: null, locationName: '' };
     }
   }
   
-  // Маппинг страна → валюта
+  /**
+   * Собирает читаемое название из ответа Nominatim.
+   * Приоритет: улица + дом → район → город → страна.
+   */
+  function buildLocationName(addr, fallbackDisplayName) {
+    const parts = [];
+  
+    // Улица + номер дома
+    const street = addr.road || addr.pedestrian || addr.footway;
+    const houseNumber = addr.house_number;
+    if (street) {
+      parts.push(houseNumber ? `${street}, ${houseNumber}` : street);
+    }
+  
+    // Магазин (если точка в магазине — Nominatim иногда знает название)
+    if (addr.shop) parts.push(addr.shop);
+  
+    // Район
+    if (addr.suburb || addr.neighbourhood || addr.city_district) {
+      parts.push(addr.suburb || addr.neighbourhood || addr.city_district);
+    }
+  
+    // Город
+    if (addr.city || addr.town || addr.village) {
+      parts.push(addr.city || addr.town || addr.village);
+    }
+  
+    // Страна
+    if (addr.country) parts.push(addr.country);
+  
+    if (parts.length > 0) {
+      return parts.join(', ');
+    }
+  
+    // Фолбэк: первые 80 символов display_name
+    return (fallbackDisplayName || '').slice(0, 80);
+  }
+  
   const COUNTRY_TO_CURRENCY = {
     UZ: 'UZS', KZ: 'KZT', RU: 'RUB', KG: 'KGS', TJ: 'TJS', TM: 'TMT',
     US: 'USD', GB: 'GBP', CA: 'CAD', AU: 'AUD', NZ: 'NZD',
@@ -62,4 +86,10 @@ export async function getCurrencyByCoordinates(lat, lng) {
   export function getCurrencyByCountry(countryCode) {
     if (!countryCode) return null;
     return COUNTRY_TO_CURRENCY[countryCode.toUpperCase()] || null;
+  }
+  
+  // Оставляем старую функцию для совместимости
+  export async function getCurrencyByCoordinates(lat, lng) {
+    const { currency } = await getLocationInfo(lat, lng);
+    return { currency };
   }
