@@ -1,0 +1,78 @@
+{
+    "app": { "title": "Preisscanner" },
+    "auth": {
+      "signIn": "Anmelden",
+      "signOut": "Abmelden",
+      "signInSuccess": "Angemeldet",
+      "signInError": "Anmeldefehler",
+      "signOutSuccess": "Abgemeldet"
+    },
+    "nav": { "myPrices": "Meine Beiträge" },
+    "scanner": {
+      "hint": "Richte die Kamera auf den Produktbarcode",
+      "error": "Kamerafehler",
+      "loadingProduct": "Produktinformationen werden geladen...",
+      "searchingNearby": "Preise in der Nähe werden gesucht...",
+      "productLoadError": "Produkt konnte nicht geladen werden"
+    },
+    "product": {
+      "unknown": "Unbekanntes Produkt",
+      "pricePlaceholder": "Preis eingeben",
+      "submit": "Senden",
+      "submitting": "Wird gesendet...",
+      "noPrices": "Noch keine Preise in der Nähe. Sei der Erste — sende deinen Preis.",
+      "hasPrices_one": "Es gibt bereits {{count}} Preis in der Nähe. Füge deinen hinzu — vergleichen wir.",
+      "hasPrices_other": "Es gibt bereits {{count}} Preise in der Nähe. Füge deinen hinzu — vergleichen wir."
+    },
+    "nearby": {
+      "title": "Preise in der Nähe",
+      "stores_one": "{{count}} Geschäft",
+      "stores_other": "{{count}} Geschäfte",
+      "storesRadius": "im Umkreis von {{radius}} km",
+      "lowest": "Niedrigster",
+      "highest": "Höchster",
+      "spread": "Spanne",
+      "yourPrice": "Dein Preis",
+      "youAreLowest": "🎉 Dein Preis ist der niedrigste!",
+      "cheapest": "Günstigster",
+      "mostExpensive": "Teuerster",
+      "yourBadge": "Dein Preis",
+      "onlyOne": "Bisher nur ein Preis. Nichts zu vergleichen — lade Freunde ein.",
+      "metersAway": "{{distance}} m entfernt"
+    },
+    "myPrices": {
+      "title": "Meine Beiträge",
+      "loading": "Wird geladen...",
+      "empty": "Du hast noch nichts eingereicht",
+      "loadError": "Ladefehler",
+      "indexHint": "Möglicherweise ist ein Index erforderlich. Prüfe die Browser-Konsole und folge dem Firestore-Fehlerlink.",
+      "unknownProduct": "Ohne Titel"
+    },
+    "errors": {
+      "needAuth": "Bitte zuerst anmelden",
+      "invalidPrice": "Gib einen gültigen Preis ein",
+      "noGeolocation": "Geolokalisierung wird nicht unterstützt",
+      "geoDenied": "Du hast den Standortzugriff verweigert",
+      "geoUnavailable": "Standort konnte nicht ermittelt werden",
+      "geoTimeout": "Geolokalisierungs-Zeitüberschreitung",
+      "geoError": "Geolokalisierungsfehler",
+      "networkError": "Kein Netzwerk, lokal gespeichert",
+      "priceSubmitted": "Preis gesendet!",
+      "determiningLocation": "Standort wird ermittelt..."
+    },
+    "language": {
+      "label": "Sprache",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English",
+      "zh": "中文",
+      "ja": "日本語",
+      "tr": "Türkçe",
+      "es": "Español",
+      "de": "Deutsch",
+      "fr": "Français",
+      "id": "Bahasa Indonesia",
+      "pt": "Português",
+      "ar": "العربية"
+    }
+  }

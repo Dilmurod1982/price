@@ -1,0 +1,86 @@
+{
+    "app": { "title": "ماسح الأسعار" },
+    "auth": {
+      "signIn": "تسجيل الدخول",
+      "signOut": "تسجيل الخروج",
+      "signInSuccess": "تم تسجيل الدخول",
+      "signInError": "خطأ في تسجيل الدخول",
+      "signOutSuccess": "تم تسجيل الخروج"
+    },
+    "nav": { "myPrices": "مساهماتي" },
+    "scanner": {
+      "hint": "وجّه الكاميرا نحو الباركود الخاص بالمنتج",
+      "error": "خطأ في الكاميرا",
+      "loadingProduct": "جارٍ تحميل معلومات المنتج...",
+      "searchingNearby": "جارٍ البحث عن الأسعار القريبة...",
+      "productLoadError": "فشل تحميل المنتج"
+    },
+    "product": {
+      "unknown": "منتج غير معروف",
+      "pricePlaceholder": "أدخل السعر",
+      "submit": "إرسال",
+      "submitting": "جارٍ الإرسال...",
+      "noPrices": "لا توجد أسعار قريبة بعد. كن الأول — أرسل سعرك.",
+      "hasPrices_zero": "لا توجد أسعار قريبة. أضف سعرك للمقارنة.",
+      "hasPrices_one": "يوجد سعر واحد قريب. أضف سعرك للمقارنة.",
+      "hasPrices_two": "يوجد سعران قريبان. أضف سعرك للمقارنة.",
+      "hasPrices_few": "توجد {{count}} أسعار قريبة. أضف سعرك للمقارنة.",
+      "hasPrices_many": "يوجد {{count}} سعرًا قريبًا. أضف سعرك للمقارنة.",
+      "hasPrices_other": "يوجد {{count}} سعر قريب. أضف سعرك للمقارنة."
+    },
+    "nearby": {
+      "title": "الأسعار القريبة",
+      "stores_zero": "لا متاجر",
+      "stores_one": "متجر واحد",
+      "stores_two": "متجران",
+      "stores_few": "{{count}} متاجر",
+      "stores_many": "{{count}} متجرًا",
+      "stores_other": "{{count}} متجر",
+      "storesRadius": "في نطاق {{radius}} كم",
+      "lowest": "الأدنى",
+      "highest": "الأعلى",
+      "spread": "الفرق",
+      "yourPrice": "سعرك",
+      "youAreLowest": "🎉 سعرك هو الأدنى!",
+      "cheapest": "الأرخص",
+      "mostExpensive": "الأغلى",
+      "yourBadge": "سعرك",
+      "onlyOne": "يوجد سعر واحد فقط حتى الآن. لا شيء للمقارنة — ادعُ أصدقاءك.",
+      "metersAway": "على بعد {{distance}} م"
+    },
+    "myPrices": {
+      "title": "مساهماتي",
+      "loading": "جارٍ التحميل...",
+      "empty": "لم ترسل أي شيء بعد",
+      "loadError": "خطأ في التحميل",
+      "indexHint": "قد يلزم وجود فهرس. تحقق من وحدة تحكم المتصفح واتبع رابط خطأ Firestore.",
+      "unknownProduct": "بدون عنوان"
+    },
+    "errors": {
+      "needAuth": "الرجاء تسجيل الدخول أولاً",
+      "invalidPrice": "أدخل سعرًا صالحًا",
+      "noGeolocation": "تحديد الموقع غير مدعوم",
+      "geoDenied": "لقد رفضت الوصول إلى الموقع",
+      "geoUnavailable": "تعذّر تحديد الموقع",
+      "geoTimeout": "انتهت مهلة تحديد الموقع",
+      "geoError": "خطأ في تحديد الموقع",
+      "networkError": "الشبكة غير متوفرة، تم الحفظ محليًا",
+      "priceSubmitted": "تم إرسال السعر!",
+      "determiningLocation": "جارٍ تحديد الموقع..."
+    },
+    "language": {
+      "label": "اللغة",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English",
+      "zh": "中文",
+      "ja": "日本語",
+      "tr": "Türkçe",
+      "es": "Español",
+      "de": "Deutsch",
+      "fr": "Français",
+      "id": "Bahasa Indonesia",
+      "pt": "Português",
+      "ar": "العربية"
+    }
+  }

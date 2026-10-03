@@ -1,0 +1,76 @@
+{
+    "app": { "title": "価格スキャナー" },
+    "auth": {
+      "signIn": "ログイン",
+      "signOut": "ログアウト",
+      "signInSuccess": "ログインしました",
+      "signInError": "ログインエラー",
+      "signOutSuccess": "ログアウトしました"
+    },
+    "nav": { "myPrices": "自分の投稿" },
+    "scanner": {
+      "hint": "カメラを商品のバーコードに向けてください",
+      "error": "カメラエラー",
+      "loadingProduct": "商品情報を読み込み中...",
+      "searchingNearby": "近くの価格を検索中...",
+      "productLoadError": "商品の読み込みに失敗しました"
+    },
+    "product": {
+      "unknown": "不明な商品",
+      "pricePlaceholder": "価格を入力",
+      "submit": "送信",
+      "submitting": "送信中...",
+      "noPrices": "近くに価格がありません。最初の投稿者になりましょう。",
+      "hasPrices_other": "近くに {{count}} 件の価格があります。自分の価格を追加して比較しましょう。"
+    },
+    "nearby": {
+      "title": "近くの価格",
+      "stores_other": "{{count}} 店舗",
+      "storesRadius": "{{radius}} km 以内",
+      "lowest": "最安値",
+      "highest": "最高値",
+      "spread": "価格差",
+      "yourPrice": "あなたの価格",
+      "youAreLowest": "🎉 あなたの価格が最安値です！",
+      "cheapest": "最安値",
+      "mostExpensive": "最高値",
+      "yourBadge": "あなたの価格",
+      "onlyOne": "まだ1つの価格しかありません。比較できません — 友達を招待してください。",
+      "metersAway": "{{distance}} m 先"
+    },
+    "myPrices": {
+      "title": "自分の投稿",
+      "loading": "読み込み中...",
+      "empty": "まだ何も投稿していません",
+      "loadError": "読み込みエラー",
+      "indexHint": "インデックスが必要かもしれません。ブラウザコンソールを確認し、Firestoreのエラーリンクに従ってください。",
+      "unknownProduct": "無題"
+    },
+    "errors": {
+      "needAuth": "先にログインしてください",
+      "invalidPrice": "有効な価格を入力してください",
+      "noGeolocation": "位置情報がサポートされていません",
+      "geoDenied": "位置情報へのアクセスを拒否しました",
+      "geoUnavailable": "位置を特定できませんでした",
+      "geoTimeout": "位置情報のタイムアウト",
+      "geoError": "位置情報エラー",
+      "networkError": "ネットワークが利用できません。ローカルに保存しました",
+      "priceSubmitted": "価格を送信しました！",
+      "determiningLocation": "位置を特定中..."
+    },
+    "language": {
+      "label": "言語",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English",
+      "zh": "中文",
+      "ja": "日本語",
+      "tr": "Türkçe",
+      "es": "Español",
+      "de": "Deutsch",
+      "fr": "Français",
+      "id": "Bahasa Indonesia",
+      "pt": "Português",
+      "ar": "العربية"
+    }
+  }

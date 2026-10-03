@@ -1,0 +1,76 @@
+{
+    "app": { "title": "Fiyat Tarayıcı" },
+    "auth": {
+      "signIn": "Giriş yap",
+      "signOut": "Çıkış yap",
+      "signInSuccess": "Giriş yapıldı",
+      "signInError": "Giriş hatası",
+      "signOutSuccess": "Çıkış yapıldı"
+    },
+    "nav": { "myPrices": "Gönderilerim" },
+    "scanner": {
+      "hint": "Kamerayı ürün barkoduna doğrultun",
+      "error": "Kamera hatası",
+      "loadingProduct": "Ürün bilgileri yükleniyor...",
+      "searchingNearby": "Yakındaki fiyatlar aranıyor...",
+      "productLoadError": "Ürün yüklenemedi"
+    },
+    "product": {
+      "unknown": "Bilinmeyen ürün",
+      "pricePlaceholder": "Fiyat girin",
+      "submit": "Gönder",
+      "submitting": "Gönderiliyor...",
+      "noPrices": "Yakında fiyat yok. İlk siz olun — kendi fiyatınızı gönderin.",
+      "hasPrices_other": "Yakında zaten {{count}} fiyat var. Kendinizinkini ekleyin — karşılaştıralım."
+    },
+    "nearby": {
+      "title": "Yakındaki fiyatlar",
+      "stores_other": "{{count}} mağaza",
+      "storesRadius": "{{radius}} km içinde",
+      "lowest": "En düşük",
+      "highest": "En yüksek",
+      "spread": "Fark",
+      "yourPrice": "Sizin fiyatınız",
+      "youAreLowest": "🎉 Fiyatınız en düşük!",
+      "cheapest": "En ucuz",
+      "mostExpensive": "En pahalı",
+      "yourBadge": "Sizin fiyatınız",
+      "onlyOne": "Şu anda sadece bir fiyat var. Karşılaştırılacak bir şey yok — arkadaşlarınızı davet edin.",
+      "metersAway": "{{distance}} m uzakta"
+    },
+    "myPrices": {
+      "title": "Gönderilerim",
+      "loading": "Yükleniyor...",
+      "empty": "Henüz bir şey göndermediniz",
+      "loadError": "Yükleme hatası",
+      "indexHint": "Bir dizin gerekebilir. Tarayıcı konsolunu kontrol edin ve Firestore hata bağlantısını takip edin.",
+      "unknownProduct": "Başlıksız"
+    },
+    "errors": {
+      "needAuth": "Lütfen önce giriş yapın",
+      "invalidPrice": "Geçerli bir fiyat girin",
+      "noGeolocation": "Konum desteklenmiyor",
+      "geoDenied": "Konum erişimini reddettiniz",
+      "geoUnavailable": "Konum belirlenemedi",
+      "geoTimeout": "Konum zaman aşımı",
+      "geoError": "Konum hatası",
+      "networkError": "Ağ kullanılamıyor, yerel olarak kaydedildi",
+      "priceSubmitted": "Fiyat gönderildi!",
+      "determiningLocation": "Konum belirleniyor..."
+    },
+    "language": {
+      "label": "Dil",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English",
+      "zh": "中文",
+      "ja": "日本語",
+      "tr": "Türkçe",
+      "es": "Español",
+      "de": "Deutsch",
+      "fr": "Français",
+      "id": "Bahasa Indonesia",
+      "pt": "Português",
+      "ar": "العربية"
+    }
+  }

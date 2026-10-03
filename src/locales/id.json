@@ -1,0 +1,76 @@
+{
+    "app": { "title": "Pemindai Harga" },
+    "auth": {
+      "signIn": "Masuk",
+      "signOut": "Keluar",
+      "signInSuccess": "Berhasil masuk",
+      "signInError": "Gagal masuk",
+      "signOutSuccess": "Berhasil keluar"
+    },
+    "nav": { "myPrices": "Kiriman saya" },
+    "scanner": {
+      "hint": "Arahkan kamera ke barcode produk",
+      "error": "Kesalahan kamera",
+      "loadingProduct": "Memuat info produk...",
+      "searchingNearby": "Mencari harga di sekitar...",
+      "productLoadError": "Gagal memuat produk"
+    },
+    "product": {
+      "unknown": "Produk tidak dikenal",
+      "pricePlaceholder": "Masukkan harga",
+      "submit": "Kirim",
+      "submitting": "Mengirim...",
+      "noPrices": "Belum ada harga di sekitar. Jadilah yang pertama — kirim harga Anda.",
+      "hasPrices_other": "Sudah ada {{count}} harga di sekitar. Tambahkan milik Anda — mari bandingkan."
+    },
+    "nearby": {
+      "title": "Harga di sekitar",
+      "stores_other": "{{count}} toko",
+      "storesRadius": "dalam radius {{radius}} km",
+      "lowest": "Terendah",
+      "highest": "Tertinggi",
+      "spread": "Selisih",
+      "yourPrice": "Harga Anda",
+      "youAreLowest": "🎉 Harga Anda yang terendah!",
+      "cheapest": "Termurah",
+      "mostExpensive": "Termahal",
+      "yourBadge": "Harga Anda",
+      "onlyOne": "Baru ada satu harga. Belum ada yang dibandingkan — undang teman Anda.",
+      "metersAway": "{{distance}} m dari Anda"
+    },
+    "myPrices": {
+      "title": "Kiriman saya",
+      "loading": "Memuat...",
+      "empty": "Anda belum mengirim apa pun",
+      "loadError": "Kesalahan pemuatan",
+      "indexHint": "Mungkin diperlukan indeks. Periksa konsol browser dan ikuti tautan kesalahan Firestore.",
+      "unknownProduct": "Tanpa judul"
+    },
+    "errors": {
+      "needAuth": "Silakan masuk terlebih dahulu",
+      "invalidPrice": "Masukkan harga yang valid",
+      "noGeolocation": "Geolokasi tidak didukung",
+      "geoDenied": "Anda menolak akses geolokasi",
+      "geoUnavailable": "Tidak dapat menentukan lokasi",
+      "geoTimeout": "Waktu geolokasi habis",
+      "geoError": "Kesalahan geolokasi",
+      "networkError": "Jaringan tidak tersedia, disimpan secara lokal",
+      "priceSubmitted": "Harga terkirim!",
+      "determiningLocation": "Menentukan lokasi..."
+    },
+    "language": {
+      "label": "Bahasa",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English",
+      "zh": "中文",
+      "ja": "日本語",
+      "tr": "Türkçe",
+      "es": "Español",
+      "de": "Deutsch",
+      "fr": "Français",
+      "id": "Bahasa Indonesia",
+      "pt": "Português",
+      "ar": "العربية"
+    }
+  }

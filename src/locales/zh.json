@@ -1,0 +1,76 @@
+{
+    "app": { "title": "价格扫描仪" },
+    "auth": {
+      "signIn": "登录",
+      "signOut": "退出",
+      "signInSuccess": "已登录",
+      "signInError": "登录错误",
+      "signOutSuccess": "已退出"
+    },
+    "nav": { "myPrices": "我的提交" },
+    "scanner": {
+      "hint": "将摄像头对准商品条形码",
+      "error": "摄像头错误",
+      "loadingProduct": "正在加载商品信息...",
+      "searchingNearby": "正在搜索附近价格...",
+      "productLoadError": "加载商品失败"
+    },
+    "product": {
+      "unknown": "未知商品",
+      "pricePlaceholder": "输入价格",
+      "submit": "提交",
+      "submitting": "提交中...",
+      "noPrices": "附近暂无价格。成为第一个提交的人。",
+      "hasPrices_other": "附近已有 {{count}} 个价格。添加您的价格以进行比较。"
+    },
+    "nearby": {
+      "title": "附近价格",
+      "stores_other": "{{count}} 家商店",
+      "storesRadius": "{{radius}} 公里内",
+      "lowest": "最低",
+      "highest": "最高",
+      "spread": "差价",
+      "yourPrice": "您的价格",
+      "youAreLowest": "🎉 您的价格最低！",
+      "cheapest": "最便宜",
+      "mostExpensive": "最贵",
+      "yourBadge": "您的价格",
+      "onlyOne": "目前只有一个价格。无法比较 —— 邀请朋友扫描此商品。",
+      "metersAway": "距您 {{distance}} 米"
+    },
+    "myPrices": {
+      "title": "我的提交",
+      "loading": "加载中...",
+      "empty": "您尚未提交任何内容",
+      "loadError": "加载错误",
+      "indexHint": "可能需要索引。请检查浏览器控制台并按照 Firestore 错误链接操作。",
+      "unknownProduct": "无标题"
+    },
+    "errors": {
+      "needAuth": "请先登录",
+      "invalidPrice": "请输入有效价格",
+      "noGeolocation": "不支持地理定位",
+      "geoDenied": "您拒绝了地理定位访问",
+      "geoUnavailable": "无法确定位置",
+      "geoTimeout": "地理定位超时",
+      "geoError": "地理定位错误",
+      "networkError": "网络不可用，已本地保存",
+      "priceSubmitted": "价格已提交！",
+      "determiningLocation": "正在确定位置..."
+    },
+    "language": {
+      "label": "语言",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English",
+      "zh": "中文",
+      "ja": "日本語",
+      "tr": "Türkçe",
+      "es": "Español",
+      "de": "Deutsch",
+      "fr": "Français",
+      "id": "Bahasa Indonesia",
+      "pt": "Português",
+      "ar": "العربية"
+    }
+  }
