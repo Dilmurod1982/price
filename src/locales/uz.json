@@ -1,0 +1,75 @@
+{
+    "app": {
+      "title": "Narx skaneri"
+    },
+    "auth": {
+      "signIn": "Kirish",
+      "signOut": "Chiqish",
+      "signInSuccess": "Siz kirdingiz",
+      "signInError": "Kirishda xatolik",
+      "signOutSuccess": "Siz chiqdingiz"
+    },
+    "nav": {
+      "myPrices": "Mening yuborganlarim"
+    },
+    "scanner": {
+      "hint": "Kamerani mahsulot shtrix-kodiga qarating",
+      "error": "Kamera xatosi",
+      "loadingProduct": "Mahsulot ma'lumotlari yuklanmoqda...",
+      "searchingNearby": "Yaqin atrofdagi narxlar qidirilmoqda...",
+      "productLoadError": "Mahsulotni yuklab bo'lmadi"
+    },
+    "product": {
+      "unknown": "Noma'lum mahsulot",
+      "pricePlaceholder": "Narxni kiriting",
+      "submit": "Yuborish",
+      "submitting": "Yuborilmoqda...",
+      "noPrices": "Yaqin atrofda narxlar yo'q. Birinchi bo'ling — o'zingiznikini yuboring.",
+      "hasPrices_one": "Yaqin atrofda {{count}} ta narx bor. O'zingiznikini qo'shing — taqqoslaymiz.",
+      "hasPrices_few": "Yaqin atrofda {{count}} ta narx bor. O'zingiznikini qo'shing — taqqoslaymiz.",
+      "hasPrices_many": "Yaqin atrofda {{count}} ta narx bor. O'zingiznikini qo'shing — taqqoslaymiz."
+    },
+    "nearby": {
+      "title": "Yaqin atrofdagi narxlar",
+      "stores_one": "{{count}} do'kon",
+      "stores_few": "{{count}} do'kon",
+      "stores_many": "{{count}} do'kon",
+      "storesRadius": "{{radius}} km radiusda",
+      "lowest": "Eng past",
+      "highest": "Eng yuqori",
+      "spread": "Farq",
+      "yourPrice": "Sizning narxingiz",
+      "youAreLowest": "🎉 Sizning narxingiz eng past!",
+      "cheapest": "Eng arzon",
+      "mostExpensive": "Eng qimmat",
+      "yourBadge": "Sizning narxingiz",
+      "onlyOne": "Hozircha faqat bitta narx. Taqqoslash uchun do'stlaringizni taklif qiling.",
+      "metersAway": "Sizdan {{distance}} m"
+    },
+    "myPrices": {
+      "title": "Mening yuborganlarim",
+      "loading": "Yuklanmoqda...",
+      "empty": "Siz hali hech narsa yubormadingiz",
+      "loadError": "Yuklashda xatolik",
+      "indexHint": "Indeks kerak bo'lishi mumkin. Brauzer konsolini tekshiring va Firestore xatoligidagi havolaga o'ting.",
+      "unknownProduct": "Nomsiz"
+    },
+    "errors": {
+      "needAuth": "Avval kiring",
+      "invalidPrice": "To'g'ri narx kiriting",
+      "noGeolocation": "Geolokatsiya qo'llab-quvvatlanmaydi",
+      "geoDenied": "Siz geolokatsiyaga ruxsat bermadingiz",
+      "geoUnavailable": "Joylashuvni aniqlab bo'lmadi",
+      "geoTimeout": "Geolokatsiya kutish vaqti tugadi",
+      "geoError": "Geolokatsiya xatosi",
+      "networkError": "Tarmoq mavjud emas, mahalliy saqlandi",
+      "priceSubmitted": "Narx yuborildi!",
+      "determiningLocation": "Joylashuv aniqlanmoqda..."
+    },
+    "language": {
+      "label": "Til",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English"
+    }
+  }

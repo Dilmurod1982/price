@@ -1,0 +1,75 @@
+{
+    "app": {
+      "title": "Price Scanner"
+    },
+    "auth": {
+      "signIn": "Sign in",
+      "signOut": "Sign out",
+      "signInSuccess": "Signed in",
+      "signInError": "Sign in error",
+      "signOutSuccess": "Signed out"
+    },
+    "nav": {
+      "myPrices": "My submissions"
+    },
+    "scanner": {
+      "hint": "Point the camera at a product barcode",
+      "error": "Camera error",
+      "loadingProduct": "Loading product info...",
+      "searchingNearby": "Searching nearby prices...",
+      "productLoadError": "Failed to load product"
+    },
+    "product": {
+      "unknown": "Unknown product",
+      "pricePlaceholder": "Enter price",
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "noPrices": "No prices nearby yet. Be the first — submit yours.",
+      "hasPrices_one": "{{count}} price nearby already. Add yours — let's compare.",
+      "hasPrices_few": "{{count}} prices nearby already. Add yours — let's compare.",
+      "hasPrices_many": "{{count}} prices nearby already. Add yours — let's compare."
+    },
+    "nearby": {
+      "title": "Nearby prices",
+      "stores_one": "{{count}} store",
+      "stores_few": "{{count}} stores",
+      "stores_many": "{{count}} stores",
+      "storesRadius": "within {{radius}} km",
+      "lowest": "Lowest",
+      "highest": "Highest",
+      "spread": "Spread",
+      "yourPrice": "Your price",
+      "youAreLowest": "🎉 Your price is the lowest!",
+      "cheapest": "Cheapest",
+      "mostExpensive": "Most expensive",
+      "yourBadge": "Your price",
+      "onlyOne": "Only one price so far. Nothing to compare — invite friends to scan this product.",
+      "metersAway": "{{distance}} m away"
+    },
+    "myPrices": {
+      "title": "My submissions",
+      "loading": "Loading...",
+      "empty": "You haven't submitted anything yet",
+      "loadError": "Load error",
+      "indexHint": "An index may be required. Check the browser console and follow the Firestore error link.",
+      "unknownProduct": "Untitled"
+    },
+    "errors": {
+      "needAuth": "Please sign in first",
+      "invalidPrice": "Enter a valid price",
+      "noGeolocation": "Geolocation is not supported",
+      "geoDenied": "You denied geolocation access",
+      "geoUnavailable": "Could not determine location",
+      "geoTimeout": "Geolocation timeout",
+      "geoError": "Geolocation error",
+      "networkError": "Network unavailable, saved locally",
+      "priceSubmitted": "Price submitted!",
+      "determiningLocation": "Determining location..."
+    },
+    "language": {
+      "label": "Language",
+      "ru": "Русский",
+      "uz": "O'zbekcha",
+      "en": "English"
+    }
+  }

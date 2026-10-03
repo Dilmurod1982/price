@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "./firebase";
 import { usePriceStore } from "./store/usePriceStore";
@@ -6,12 +7,14 @@ import { useAuth } from "./hooks/useAuth";
 import BarcodeScanner from "./components/BarcodeScanner";
 import { Toast } from "./components/Toast";
 import { MyPrices } from "./components/MyPrices";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { fetchProductByBarcode } from "./services/productApi";
 import { submitPrice } from "./services/priceService";
 import { queryNearbyPrices } from "./services/geoService";
 import { getLocationInfo } from "./services/locationService";
 
 export default function App() {
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const {
     currentBarcode,
@@ -34,15 +37,15 @@ export default function App() {
   const handleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      showToast("Вы вошли", "success");
+      showToast(t("auth.signInSuccess"), "success");
     } catch (err) {
-      showToast("Ошибка входа: " + err.message, "error");
+      showToast(`${t("auth.signInError")}: ${err.message}`, "error");
     }
   };
 
   const handleSignOut = async () => {
     await signOut(auth);
-    showToast("Вы вышли", "info");
+    showToast(t("auth.signOutSuccess"), "info");
   };
 
   const handleScan = async (barcode) => {
@@ -54,13 +57,36 @@ export default function App() {
       setProduct(
         product || {
           barcode,
-          name: "Неизвестный товар",
+          name: t("product.unknown"),
           brand: "",
           imageUrl: "",
         }
       );
+
+      if (navigator.geolocation) {
+        showToast(t("scanner.searchingNearby"), "info");
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+              const nearby = await queryNearbyPrices(
+                barcode,
+                latitude,
+                longitude
+              );
+              setNearbyPrices(nearby);
+            } catch (err) {
+              console.error("Nearby query failed:", err);
+            }
+          },
+          (err) => {
+            console.warn("Geolocation unavailable:", err.code);
+          },
+          { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
+        );
+      }
     } catch (err) {
-      showToast("Не удалось загрузить товар", "error");
+      showToast(t("scanner.productLoadError"), "error");
     } finally {
       setProductLoading(false);
     }
@@ -68,23 +94,23 @@ export default function App() {
 
   const handleSubmitPrice = () => {
     if (!user) {
-      showToast("Сначала войдите", "warning");
+      showToast(t("errors.needAuth"), "warning");
       return;
     }
 
     const price = Number(priceInput);
     if (!price || price <= 0) {
-      showToast("Введите корректную цену", "warning");
+      showToast(t("errors.invalidPrice"), "warning");
       return;
     }
 
     if (!navigator.geolocation) {
-      showToast("Геолокация не поддерживается", "error");
+      showToast(t("errors.noGeolocation"), "error");
       return;
     }
 
     setSubmitting(true);
-    showToast("Определяем местоположение...", "info");
+    showToast(t("errors.determiningLocation"), "info");
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -108,7 +134,7 @@ export default function App() {
             lng: longitude,
           });
 
-          showToast("Цена отправлена!", "success");
+          showToast(t("errors.priceSubmitted"), "success");
 
           const nearby = await queryNearbyPrices(
             currentBarcode,
@@ -127,7 +153,7 @@ export default function App() {
             price,
             timestamp: Date.now(),
           });
-          showToast("Сеть недоступна, сохранено локально", "warning");
+          showToast(t("errors.networkError"), "warning");
           setPriceInput("");
           resetCurrent();
         } finally {
@@ -138,17 +164,16 @@ export default function App() {
         setSubmitting(false);
         console.error("geolocation error:", err.code, err.message);
         const messages = {
-          1: "Вы отклонили доступ к геолокации",
-          2: "Не удалось определить местоположение",
-          3: "Превышено время ожидания геолокации",
+          1: t("errors.geoDenied"),
+          2: t("errors.geoUnavailable"),
+          3: t("errors.geoTimeout"),
         };
-        showToast(messages[err.code] || "Ошибка геолокации", "error");
+        showToast(messages[err.code] || t("errors.geoError"), "error");
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   };
 
-  // Вычисляем статистику по ценам заранее (вне JSX)
   const minPrice = nearbyPrices.length
     ? Math.min(...nearbyPrices.map((p) => p.price))
     : 0;
@@ -164,69 +189,68 @@ export default function App() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-gray-500">Загрузка...</div>
+        <div className="text-gray-500">{t("myPrices.loading")}</div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
-      {/* Шапка */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2">
           <h1 className="text-lg sm:text-xl font-bold text-gray-900 shrink-0">
-            Сканер цен
+            {t("app.title")}
           </h1>
 
-          {user ? (
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+            <LanguageSwitcher />
+
+            {user ? (
+              <>
+                <button
+                  onClick={() => setShowMyPrices(true)}
+                  className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 whitespace-nowrap"
+                >
+                  {t("nav.myPrices")}
+                </button>
+                <img
+                  src={user.photoURL}
+                  alt=""
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full shrink-0"
+                  referrerPolicy="no-referrer"
+                />
+                <button
+                  onClick={handleSignOut}
+                  className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 whitespace-nowrap"
+                >
+                  {t("auth.signOut")}
+                </button>
+              </>
+            ) : (
               <button
-                onClick={() => setShowMyPrices(true)}
-                className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 whitespace-nowrap"
+                onClick={handleSignIn}
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-blue-700 transition shrink-0"
               >
-                Мои отправки
+                {t("auth.signIn")}
               </button>
-              <img
-                src={user.photoURL}
-                alt=""
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full shrink-0"
-                referrerPolicy="no-referrer"
-              />
-              <button
-                onClick={handleSignOut}
-                className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 whitespace-nowrap"
-              >
-                Выйти
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={handleSignIn}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-blue-700 transition shrink-0"
-            >
-              Войти
-            </button>
-          )}
+            )}
+          </div>
         </div>
       </header>
 
-      {/* Основной контент */}
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
-        {/* Сканер */}
         <section className="w-full flex justify-center">
           <div className="w-full max-w-sm sm:max-w-md">
             <BarcodeScanner onScan={handleScan} />
           </div>
         </section>
 
-        {/* Загрузка товара */}
         {productLoading && (
           <div className="text-center text-gray-500 py-4 text-sm">
-            Загружаем информацию о товаре...
+            {t("scanner.loadingProduct")}
           </div>
         )}
 
-        {/* Карточка товара */}
         {currentProduct && !productLoading && (
           <section className="bg-white rounded-2xl shadow-sm p-4 sm:p-5 space-y-4">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -256,7 +280,7 @@ export default function App() {
               <input
                 type="number"
                 inputMode="decimal"
-                placeholder="Введите цену"
+                placeholder={t("product.pricePlaceholder")}
                 value={priceInput}
                 onChange={(e) => setPriceInput(e.target.value)}
                 className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
@@ -266,45 +290,50 @@ export default function App() {
                 disabled={submitting || !priceInput}
                 className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition whitespace-nowrap"
               >
-                {submitting ? "Отправка..." : "Отправить"}
+                {submitting ? t("product.submitting") : t("product.submit")}
               </button>
             </div>
+
+            {nearbyPrices.length === 0 && !submitting && (
+              <p className="text-xs text-gray-400 text-center">
+                {t("product.noPrices")}
+              </p>
+            )}
+
+            {nearbyPrices.length > 0 && !myPrice && (
+              <p className="text-xs text-blue-600 text-center">
+                {t("product.hasPrices", { count: nearbyPrices.length })}
+              </p>
+            )}
           </section>
         )}
 
-        {/* Список цен с сравнением */}
         {nearbyPrices.length > 0 && (
           <section className="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
-              Цены поблизости
+              {t("nearby.title")}
             </h3>
             <p className="text-xs text-gray-400 mb-4">
-              {nearbyPrices.length}{" "}
-              {nearbyPrices.length === 1
-                ? "магазин"
-                : nearbyPrices.length < 5
-                ? "магазина"
-                : "магазинов"}{" "}
-              в радиусе 5 км
+              {t("nearby.stores", { count: nearbyPrices.length })}{" "}
+              {t("nearby.storesRadius", { radius: 5 })}
             </p>
 
-            {/* Сводка */}
             {hasComparison && (
               <div className="bg-blue-50 rounded-xl p-4 mb-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Самая низкая</span>
+                  <span className="text-gray-600">{t("nearby.lowest")}</span>
                   <span className="font-semibold text-green-700">
                     {minPrice.toLocaleString()} {nearbyPrices[0].currency}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Самая высокая</span>
+                  <span className="text-gray-600">{t("nearby.highest")}</span>
                   <span className="font-semibold text-red-700">
                     {maxPrice.toLocaleString()} {nearbyPrices[0].currency}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Разброс</span>
+                  <span className="text-gray-600">{t("nearby.spread")}</span>
                   <span className="font-medium text-gray-900">
                     {spread.toLocaleString()} {nearbyPrices[0].currency} (
                     {spreadPercent}%)
@@ -313,7 +342,9 @@ export default function App() {
 
                 {myPrice && myPrice !== minPrice && (
                   <div className="pt-2 border-t border-blue-200 flex justify-between text-sm">
-                    <span className="text-gray-700">Ваша цена</span>
+                    <span className="text-gray-700">
+                      {t("nearby.yourPrice")}
+                    </span>
                     <span className="font-semibold text-gray-900">
                       {myPrice.toLocaleString()} {nearbyPrices[0].currency}{" "}
                       <span className="text-red-600">
@@ -325,21 +356,18 @@ export default function App() {
 
                 {myPrice && myPrice === minPrice && (
                   <div className="pt-2 border-t border-blue-200 text-sm text-green-700 font-medium text-center">
-                    🎉 Ваша цена — самая низкая!
+                    {t("nearby.youAreLowest")}
                   </div>
                 )}
               </div>
             )}
 
-            {/* Дисклеймер при малом количестве данных */}
             {nearbyPrices.length === 1 && (
               <div className="text-xs text-amber-700 bg-amber-50 p-2 rounded mb-3">
-                Пока только одна цена. Сравнивать не с чем — пригласите друзей
-                отсканировать этот товар.
+                {t("nearby.onlyOne")}
               </div>
             )}
 
-            {/* Список с подсветкой */}
             <div className="divide-y divide-gray-100">
               {nearbyPrices.map((p) => {
                 const isMin = hasComparison && p.price === minPrice;
@@ -376,17 +404,17 @@ export default function App() {
 
                           {isMin && (
                             <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded">
-                              Дешевле всего
+                              {t("nearby.cheapest")}
                             </span>
                           )}
                           {isMax && (
                             <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded">
-                              Дороже всего
+                              {t("nearby.mostExpensive")}
                             </span>
                           )}
                           {isMine && (
                             <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded">
-                              Ваша цена
+                              {t("nearby.yourBadge")}
                             </span>
                           )}
                         </div>
@@ -397,7 +425,7 @@ export default function App() {
                           </div>
                         ) : (
                           <div className="text-xs text-gray-400 mt-1">
-                            {p.distance} м от вас
+                            {t("nearby.metersAway", { distance: p.distance })}
                           </div>
                         )}
                       </div>
@@ -415,10 +443,9 @@ export default function App() {
           </section>
         )}
 
-        {/* Пустое состояние */}
         {!currentProduct && !productLoading && nearbyPrices.length === 0 && (
           <div className="text-center py-12 text-gray-400 text-sm">
-            <p>Наведите камеру на штрих-код товара</p>
+            <p>{t("scanner.hint")}</p>
           </div>
         )}
       </main>

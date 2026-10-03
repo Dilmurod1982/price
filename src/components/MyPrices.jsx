@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../hooks/useAuth";
 
 export function MyPrices({ onClose }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,37 +39,36 @@ export function MyPrices({ onClose }) {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between mb-4 sticky top-0 bg-white py-3 border-b border-gray-100">
           <h2 className="text-lg font-bold text-gray-900">
-            Мои отправки {!loading && `(${prices.length})`}
+            {t("myPrices.title")} {!loading && `(${prices.length})`}
           </h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-900 text-3xl leading-none w-8 h-8 flex items-center justify-center"
-            aria-label="Закрыть"
+            aria-label="Close"
           >
             ×
           </button>
         </div>
 
         {loading && (
-          <p className="text-gray-400 text-center py-8">Загрузка...</p>
+          <p className="text-gray-400 text-center py-8">
+            {t("myPrices.loading")}
+          </p>
         )}
 
         {error && (
           <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm">
-            <p className="font-medium">Ошибка загрузки</p>
+            <p className="font-medium">{t("myPrices.loadError")}</p>
             <p className="mt-1">{error}</p>
             {error.includes("index") && (
-              <p className="mt-2">
-                Похоже, нужен индекс. Проверь консоль браузера и перейди по
-                ссылке из ошибки Firestore.
-              </p>
+              <p className="mt-2">{t("myPrices.indexHint")}</p>
             )}
           </div>
         )}
 
         {!loading && !error && prices.length === 0 && (
           <p className="text-gray-400 text-center py-8">
-            Вы ещё ничего не отправляли
+            {t("myPrices.empty")}
           </p>
         )}
 
@@ -80,7 +81,7 @@ export function MyPrices({ onClose }) {
               <div className="flex justify-between items-start gap-3">
                 <div className="min-w-0 flex-1">
                   <h3 className="font-medium text-gray-900 truncate">
-                    {p.productName || "Без названия"}
+                    {p.productName || t("myPrices.unknownProduct")}
                   </h3>
                   <p className="text-xs text-gray-400 font-mono truncate">
                     {p.barcode}
@@ -93,7 +94,6 @@ export function MyPrices({ onClose }) {
                 </div>
               </div>
 
-              {/* Локация: название или координаты */}
               {p.locationName ? (
                 <div className="flex items-start gap-1.5 mt-2 text-xs text-gray-500">
                   <svg
@@ -148,7 +148,7 @@ export function MyPrices({ onClose }) {
               )}
 
               <div className="text-xs text-gray-400 mt-2">
-                {p.timestamp?.toDate?.().toLocaleString("ru-RU") || "—"}
+                {p.timestamp?.toDate?.().toLocaleString() || "—"}
               </div>
             </div>
           ))}
